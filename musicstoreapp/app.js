@@ -21,15 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-app.get("/songs", function (req, res) {
-  console.log("depurar aqui")
-  res.send("Lista de canciones")
-});
-app.get("/singers", function (req, res) {
-  console.log("depurar aqui")
-  res.send("Lista de cantantes")
-});
+require('./routes/songs')(app)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
