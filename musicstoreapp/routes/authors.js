@@ -24,6 +24,31 @@ module.exports = function(app) {
         res.render('authors/authors.twig', response)
     })
 
+
+    app.get("/authors/filter/:role", (req, res) => {
+        const authors = [
+            {
+                name: 'Angus Young',
+                group: 'AC/DC',
+                role: 'guitar'
+            },
+            {
+                name: 'Dan Raynolds',
+                group: 'Imagine Dragons',
+                role: 'singer'
+            },
+            {
+                name: 'Billie Joe Armstrong',
+                group: 'Green Day',
+                role: 'singer'
+            },
+        ]
+        const response = {
+            authors: authors.filter(author => author.role === req.params.role)
+        }
+        res.render('authors/authors.twig', response)
+    })
+
     app.get('/authors/add', (req, res) => {
 
         const roles = [
