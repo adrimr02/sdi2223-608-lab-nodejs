@@ -21,8 +21,28 @@ module.exports = function (app) {
         res.render('shop.twig', response);
     })
 
-    app.post('/songs/add', function(req, res) {
+    app.get('/songs/add', function(req, res) {
         res.render("add.twig");
+    })
+
+    app.post('/songs/add', function(req, res) {
+        let response = ''
+        if (req.body.name)
+            response += `Nombre: ${req.body.name}<br>`
+        else
+            response += `Nombre no enviado en la petición<br>`
+
+        if (req.body.group)
+            response += `Grupo: ${req.body.group}<br>`
+        else
+            response += `Grupo no enviado en la petición<br>`
+
+        if (req.body.role)
+            response += `Rol: ${req.body.role}<br>`
+        else
+            response += `Rol no enviado en la petición<br>`
+
+        res.send(response);
     })
 
     app.get('/songs/:id', function(req, res) {
@@ -34,55 +54,6 @@ module.exports = function (app) {
         let response = 'id: ' + req.params.id + '<br>'
             + 'Tipo de música: ' + req.params.kind;
         res.send(response);
-    });
-
-    app.get('/add', function(req, res) {
-        let response = parseInt(req.query.num1) + parseInt(req.query.num2);
-        res.send(String(response));
-    });
-
-    app.get('/promo*', function (req, res) {
-        res.send('Respuesta al patrón promo*');
-    });
-
-    app.get('/pro*ar', function (req, res) {
-        res.send('Respuesta al patrón pro*ar');
-    });
-
-    app.get('/', function (req, res) {
-        res.send('root');
-    });
-
-    app.get('/about', function (req, res) {
-        res.send('about');
-    });
-
-    app.get('/random.text', function (req, res) {
-        res.send('random.text');
-    });
-
-    app.get('/ab?cd', function(req, res) {
-        res.send('ab?cd');
-    });
-
-    app.get('/ab+cd', function(req, res) {
-        res.send('ab+cd');
-    });
-
-    app.get('/ab*cd', function(req, res) {
-        res.send('ab*cd');
-    });
-
-    app.get('/ab(cd)?e', function(req, res) {
-        res.send('ab(cd)?e');
-    });
-
-    app.get(/a/, function(req, res) {
-        res.send('/a/');
-    });
-
-    app.get(/.*fly$/, function(req, res) {
-        res.send('/.*fly$/');
     });
 
 }
