@@ -25,20 +25,48 @@ module.exports = function(app) {
     })
 
     app.get('/authors/add', (req, res) => {
-        res.render("authors/add.twig")
+
+        const roles = [
+            {
+                value: 'singer',
+                text: 'Cantante',
+            },
+            {
+                value: 'guitar',
+                text: 'Guitarrista',
+            },
+            {
+                value: 'bass',
+                text: 'Bajista',
+            },
+            {
+                value: 'drummer',
+                text: 'Bateria',
+            },
+            {
+                value: 'pianist',
+                text: 'Pianista',
+            },
+        ]
+
+        res.render("authors/add.twig",{
+            roles
+        })
     })
 
     app.post('/authors/add', (req, res) => {
         let response = ''
         if (req.body.name)
-            response += `Título: ${req.body.title}<br>`
-        if (req.body.author)
-            response += `Autor: ${req.body.author}<br>`
+            response += `Nombre: ${req.body.name}<br>`
+        if (req.body.group)
+            response += `Autor: ${req.body.group}<br>`
+        if (req.body.role)
+            response += `Rol: ${req.body.role}<br>`
 
         res.send(response)
     })
 
-    app.get('/authors/**', (req, res) => {
+    app.get('/authors/*', (req, res) => {
         res.redirect('/authors')
     })
 
