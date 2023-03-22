@@ -3,9 +3,11 @@ const createError = require('http-errors')
 const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
+const fileUpload = require('express-fileupload')
 
 const logger = require('morgan')
 
+const songsRepository = require("./repositories/songsRepository.js")
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
 
@@ -14,7 +16,6 @@ const app = express()
 // Database setup
 const uri = "mongodb+srv://sdi2223-608:NQgbUZGRCYFx9Zlm@proyects.aukjk.mongodb.net/?retryWrites=true&w=majority"
 app.set('connectionStrings', uri)
-const songsRepository = require("./repositories/songsRepository.js")
 songsRepository.init(app, MongoClient)
 
 // view engine setup
@@ -26,6 +27,11 @@ app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use(fileUpload({
+  limits: { filesize: 50 * 1024 * 1024 },
+  createParentPath: true
+}))
+app.set('uploadPath', __dirname)
 app.use(express.static(path.join(__dirname, 'public')))
 
 /*

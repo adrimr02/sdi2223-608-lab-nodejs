@@ -16,9 +16,36 @@ module.exports = {
                 songsCollection.insertOne(song)
                     .then(result => callbackFunction(result.insertedId))
                     .then(() => dbClient.close())
-                    .catch(err => callbackFunction(null, {error: err.message}))
+                    .catch(err => {
+                        console.log(err)
+                        callbackFunction(null, {error: err.message})
+                    })
             }
         })
-    }
+    },
+    getSongs: async function (filter, options) {
+        try {
+            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
+            const database = client.db("sdi-music-store");
+            const collectionName = 'songs';
+            const songsCollection = database.collection(collectionName);
+            const songs = await songsCollection.find(filter, options).toArray();
+            return songs;
+        } catch (error) {
+            throw (error);
+        }
+    },
+    findSong: async function (filter, options) {
+        try {
+            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
+            const database = client.db("sdi-music-store");
+            const collectionName = 'songs';
+            const songsCollection = database.collection(collectionName);
+            const song = await songsCollection.findOne(filter, options);
+            return song;
+        } catch (error) {
+            throw (error);
+        }
+    },
 
 }
