@@ -1,4 +1,5 @@
-module.exports = function (app) {
+const songsRepository = require("../repositories/songsRepository");
+module.exports = function (app, songsRepository) {
     app.get("/songs", (req, res) => {
         const songs = [
             {
@@ -18,32 +19,38 @@ module.exports = function (app) {
             seller: 'Tienda de canciones',
             songs
         }
-        res.render('shop.twig', response);
+        res.render('shop.twig', response)
     })
 
     app.get('/songs/add', function(req, res) {
-        res.render("add.twig");
+        res.render("add.twig")
     })
 
     app.post('/songs/add', function(req, res) {
-        let response = ''
-        if (req.body.title)
-            response += `Título: ${req.body.title}<br>`
-        if (req.body.author)
-            response += `Autor: ${req.body.author}<br>`
+        let song = {
+            title: req.body.title,
+            kind: req.body.kind,
+            price: req.body.price,
+        }
+        songsRepository.insertSong(song, (songId, err) => {
+            if (!songId) {
+                res.send("Error al insertar la canción")
+            } else {
+                res.send('Agregada la cancion ID: ' + songId)
+            }
+        })
 
-        res.send(response);
     })
 
     app.get('/songs/:id', function(req, res) {
-        let response = 'id: ' + req.params.id;
-        res.send(response);
+        let response = 'id: ' + req.params.id
+        res.send(response)
     });
 
     app.get('/songs/:kind/:id', function(req, res) {
         let response = 'id: ' + req.params.id + '<br>'
-            + 'Tipo de música: ' + req.params.kind;
-        res.send(response);
+            + 'Tipo de música: ' + req.params.kind
+        res.send(response)
     });
 
 }
