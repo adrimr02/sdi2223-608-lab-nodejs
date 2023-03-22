@@ -4,19 +4,25 @@ const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
-
 const logger = require('morgan')
+const crypto = require('crypto')
+const expressSession = require('express-session')
 
-const songsRepository = require("./repositories/songsRepository.js")
+const songsRepository = require('./repositories/songsRepository.js')
+const usersRepository = require('./repositories/usersRepository')
 const indexRouter = require('./routes/index')
-const usersRouter = require('./routes/users')
 
+// Server setup
 const app = express()
+app.set('uploadPath', __dirname)
+app.set('clave', 'abcdefg')
+app.set('crypto', crypto)
 
 // Database setup
 const uri = "mongodb+srv://sdi2223-608:NQgbUZGRCYFx9Zlm@proyects.aukjk.mongodb.net/?retryWrites=true&w=majority"
 app.set('connectionStrings', uri)
 songsRepository.init(app, MongoClient)
+usersRepository.init(app, MongoClient)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -31,14 +37,18 @@ app.use(fileUpload({
   limits: { filesize: 50 * 1024 * 1024 },
   createParentPath: true
 }))
-app.set('uploadPath', __dirname)
+app.use(expressSession({
+  secret: 'abcdefg',
+  resave: true,
+  saveUninitialized: true
+}))
 app.use(express.static(path.join(__dirname, 'public')))
 
 /*
  * Setting routes
  */
 app.use('/', indexRouter)
-app.use('/users', usersRouter)
+require('./routes/users')(app, usersRepository)
 require('./routes/songs')(app, songsRepository)
 require('./routes/authors')(app)
 
