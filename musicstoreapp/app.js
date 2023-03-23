@@ -8,6 +8,8 @@ const logger = require('morgan')
 const crypto = require('crypto')
 const expressSession = require('express-session')
 
+const userSessionRouter = require('./routes/userSessionRouter')
+const userAudiosRouter = require('./routes/userAudiosRouter');
 const songsRepository = require('./repositories/songsRepository.js')
 const usersRepository = require('./repositories/usersRepository')
 const indexRouter = require('./routes/index')
@@ -42,6 +44,13 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true
 }))
+
+app.use("/songs/add",userSessionRouter)
+app.use("/songs/edit",userSessionRouter)
+app.use("/publications",userSessionRouter)
+app.use("/audios/",userAudiosRouter)
+app.use("/shop/",userSessionRouter)
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 /*
