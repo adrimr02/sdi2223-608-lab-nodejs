@@ -23,6 +23,9 @@
             <h4 class=panel-title">{{ comment.author }}</h4>
         </div>
         <p class="panel-body">{{ comment.text }}</p>
+        <div class="panel-footer">
+            <a href="/comments/delete/{{ comment._id }}">Eliminar</a>
+        </div>
     </div>
     {% endfor %}
 </div>
@@ -37,7 +40,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">Aceptar</button>
+                <button type="submit" class="btn btn-primary">Enviar</button>
             </div>
         </div>
     </form>

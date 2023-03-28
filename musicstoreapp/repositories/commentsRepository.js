@@ -34,4 +34,26 @@ module.exports = {
             throw (error);
         }
     },
+    findComment: async function (filter, options) {
+        try {
+            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
+            const database = client.db("sdi-music-store");
+            const collectionName = 'comments';
+            const commentsCollection = database.collection(collectionName);
+            return await commentsCollection.findOne(filter, options);
+        } catch (error) {
+            throw (error);
+        }
+    },
+    deleteComment: async function (filter, options) {
+        try {
+            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
+            const database = client.db("sdi-music-store");
+            const collectionName = 'comments';
+            const commentsCollection = database.collection(collectionName);
+            await commentsCollection.deleteOne(filter, options);
+        } catch (error) {
+            throw error;
+        }
+    }
 }

@@ -41,7 +41,7 @@ module.exports = function (app, usersRepository) {
             res.send('Usuario no identificado')
           } else {
             req.session.user = user.email
-            res.send('Usuario identificado correctamente: ' + user.email)
+            res.redirect('/shop')
           }
         })
         .catch(error => {
@@ -52,6 +52,6 @@ module.exports = function (app, usersRepository) {
 
   app.get('/users/logout', function (req, res) {
     req.session.user = null
-    res.send('El usuario se ha desconectado correctamente')
+    res.redirect('/users/login')
   })
 }
