@@ -1,6 +1,5 @@
-const songsRepository = require("../repositories/songsRepository");
 const {ObjectId} = require("mongodb");
-module.exports = function (app, songsRepository) {
+module.exports = function (app, songsRepository, commentRepo) {
 
     app.get('/shop', (req, res) => {
         let filter = {};
@@ -102,8 +101,9 @@ module.exports = function (app, songsRepository) {
     app.get('/songs/:id', function(req, res) {
         let filter = { _id: ObjectId(req.params.id) };
         let options = {};
-        songsRepository.findSong(filter, options).then(song => {
-            res.render("songs/song.twig", {song: song});
+        songsRepository.findSong(filter, options).then( async song => {
+            const comments = await commentRepo.getComments({ song_id: ObjectId(song._id) },{})
+            res.render("songs/song.twig", { song, comments });
         }).catch(error => {
             res.send("Se ha producido un error al buscar la canción " + error)
         });
