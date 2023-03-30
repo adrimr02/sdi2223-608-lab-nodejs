@@ -10,8 +10,7 @@
             <h2>{{ song.title }} </h2>
             <p class="small">{{ song.author }} </p>
             <p class="text-right">{{ song.kind }} €</p>
-            <button type="button" class="btn btn-primary pull-right">{{ song.price }}</button>
-            <!-- Cambiar por reproducir si esta comprada -->
+            <a class="btn btn-primary pull-right" href="/songs/buy/{{ song._id }}">{{ song.price }} €</a>
         </div>
     </div>
 </div>
