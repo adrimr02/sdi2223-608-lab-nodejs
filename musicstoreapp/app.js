@@ -10,6 +10,8 @@ const expressSession = require('express-session')
 
 const userSessionRouter = require('./routes/userSessionRouter')
 const userAudiosRouter = require('./routes/userAudiosRouter')
+const userAuthorRouter = require('./routes/userAuthorRouter');
+
 const songsRepository = require('./repositories/songsRepository')
 const usersRepository = require('./repositories/usersRepository')
 const commentsRepository = require('./repositories/commentsRepository')
@@ -54,6 +56,8 @@ app.use("/publications",userSessionRouter)
 app.use("/audios/",userAudiosRouter)
 app.use("/shop/",userSessionRouter)
 app.use("/comments",userSessionRouter)
+app.use("/songs/edit",userAuthorRouter);
+app.use("/songs/delete",userAuthorRouter);
 
 app.use(express.static(path.join(__dirname, 'public')))
 

@@ -59,4 +59,16 @@ module.exports = {
             throw (error);
         }
     },
+    deleteSong: async function (filter, options) {
+        try {
+            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
+            const database = client.db("sdi-music-store");
+            const collectionName = 'songs';
+            const songsCollection = database.collection(collectionName);
+            const result = await songsCollection.deleteOne(filter, options);
+            return result;
+        } catch (error) {
+            throw (error);
+        }
+    },
 }
