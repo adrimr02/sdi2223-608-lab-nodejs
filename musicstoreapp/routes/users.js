@@ -16,7 +16,7 @@ module.exports = function (app, usersRepository) {
     }
 
     usersRepository.insertUser(user).then(userId => {
-      res.send('Usuario registrado ' + userId)
+      res.redirect("/users/login");
     }).catch(error => {
       res.send("Error al insertar el usuario")
     })
@@ -41,7 +41,7 @@ module.exports = function (app, usersRepository) {
             res.send('Usuario no identificado')
           } else {
             req.session.user = user.email
-            res.redirect('/shop')
+            res.redirect("/publications");
           }
         })
         .catch(error => {
