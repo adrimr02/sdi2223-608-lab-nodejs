@@ -26,7 +26,6 @@ module.exports = function (app, songsRepository, commentRepo) {
         pages: pages,
         currentPage: page
       }
-      console.log(response)
       res.render("shop.twig", response)
     })
     .catch(error => {
