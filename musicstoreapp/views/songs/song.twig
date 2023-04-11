@@ -2,46 +2,52 @@
 {% block title %} Detalles de la canción {% endblock %}
 {% block main_container %}
 <div class="row">
-    <div class="media col-xs-10">
-        <div class="media-left media-middle">
-            <img class="media-object" src="/covers/{{song._id}}.png" alt="logo"/>
-        </div>
-        <div class="media-body">
-            <h2>{{ song.title }} </h2>
-            <p class="small">{{ song.author }} </p>
-            <p class="text-right">{{ song.kind }} €</p>
-            <a class="btn btn-primary pull-right" href="/songs/buy/{{ song._id }}">{{ song.price }} €</a>
-        </div>
+  <div class="media col-xs-10">
+    <div class="media-left media-middle">
+      <img class="media-object" src="/covers/{{song._id}}.png" alt="logo"/>
     </div>
+    <div class="media-body">
+      <h2>{{ song.title }} </h2>
+      <p class="small">{{ song.author }}</p>
+      <p class="text-right">{{ song.kind }}</p>
+      {% if not owns %}
+      <a class="btn btn-primary pull-right" href="/songs/buy/{{ song._id }}">{{ song.price }} €</a>
+      {% else %}
+      <audio controls>
+        <source src="/audios/{{ song._id }}.mp3" type="audio/mpeg">
+      </audio>  
+      {% endif %}
+    </div>
+  </div>
 </div>
 <hr>
 <div>
-    {% for comment in comments %}
-    <div class="panel panel-default" id="{{ comment._id }}">
-        <div class="panel-heading">
-            <h4 class=panel-title">{{ comment.author }}</h4>
-        </div>
-        <p class="panel-body">{{ comment.text }}</p>
-        <div class="panel-footer">
-            <a href="/comments/delete/{{ comment._id }}">Eliminar</a>
-        </div>
+  {% for comment in comments %}
+  <div class="panel panel-default" id="{{ comment._id }}">
+    <div class="panel-heading">
+      <h4 class="panel-title">{{ comment.author }}</h4>
     </div>
-    {% endfor %}
+    <p class="panel-body">{{ comment.text }}</p>
+    <div class="panel-footer">
+      <a href="/comments/delete/{{ comment._id }}">Eliminar</a>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 <div class="">
-    <h3>Añade un comentario</h3>
-    <form class="form-horizontal" method="post" action="/comments/{{ song._id }}">
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="comment">Comentario:</label>
-            <div class="col-sm-10">
-                <textarea class="form-control" name="comment" id="comment" rows="5"></textarea>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">Enviar</button>
-            </div>
-        </div>
-    </form>
+  <h3>Añade un comentario</h3>
+  <form class="form-horizontal" method="post" action="/comments/{{ song._id }}">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="comment">Comentario:</label>
+      <div class="col-sm-10">
+        <textarea class="form-control" name="comment" id="comment" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Enviar</button>
+      </div>
+    </div>
+  </form>
 </div>
 {% endblock %}

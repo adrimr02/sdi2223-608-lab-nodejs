@@ -125,8 +125,27 @@ module.exports = function (app, songsRepository, commentRepo) {
     });
   })
   
-  app.get('/songs/buy/:id', function (req, res) {
+  app.get('/songs/buy/:id', async function (req, res) {
     let songId = ObjectId(req.params.id)
+    
+    const song = await songsRepository.findSong({ _id: songId }, {})
+    if (!song) {
+      res.redirect('/shop?message=No se ha encontrado la canción&messageType=alert-danger')
+      return
+    }
+
+    const purchased = await songsRepository.getPurchases({songId: (songId), user: req.session.user}, {})
+    if (purchased.length > 0) {
+      res.redirect(`/songs/${songId}?message=Ya has comprado esta canción&messageType=alert-danger`)
+      return
+    }
+
+
+    if (song.author === req.session.user) {
+      res.redirect(`/songs/${songId}?message=No puedes comprar tu propia canción&messageType=alert-danger`)
+      return
+    }
+
     let shop = {
       user: req.session.user,
       songId: songId
@@ -145,7 +164,8 @@ module.exports = function (app, songsRepository, commentRepo) {
     let options = {}
     songsRepository.findSong(filter, options).then( async song => {
       const comments = await commentRepo.getComments({ song_id: ObjectId(song._id) },{})
-      res.render("songs/song.twig", { song, comments })
+      const purchased = await songsRepository.getPurchases({songId: song._id, user: req.session.user}, {})
+      res.render("songs/song.twig", { song, comments, owns: song.author === req.session.user || purchased.length > 0 })
     }).catch(error => {
       res.send("Se ha producido un error al buscar la canción " + error)
     })

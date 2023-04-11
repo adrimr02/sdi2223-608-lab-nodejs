@@ -4,7 +4,6 @@ const {ObjectId} = require("mongodb")
 const songsRepository = require("../repositories/songsRepository")
 
 userAudiosRouter.use(function (req, res, next) {
-  console.log("routerAudios")
   let path = require('path')
   let songId = path.basename(req.originalUrl, '.mp3')
   let filter = {_id: ObjectId(songId)}
