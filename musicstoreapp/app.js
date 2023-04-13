@@ -7,10 +7,12 @@ const fileUpload = require('express-fileupload')
 const logger = require('morgan')
 const crypto = require('crypto')
 const expressSession = require('express-session')
+let jwt = require('jsonwebtoken')
 
 const userSessionRouter = require('./routes/userSessionRouter')
 const userAudiosRouter = require('./routes/userAudiosRouter')
-const userAuthorRouter = require('./routes/userAuthorRouter');
+const userAuthorRouter = require('./routes/userAuthorRouter')
+const userTokenRouter = require('./routes/userTokenRouter')
 
 const songsRepository = require('./repositories/songsRepository')
 const usersRepository = require('./repositories/usersRepository')
@@ -23,6 +25,7 @@ const app = express()
 app.set('uploadPath', __dirname)
 app.set('clave', 'abcdefg')
 app.set('crypto', crypto)
+app.set('jwt', jwt)
 
 // Database setup
 const uri = "mongodb+srv://sdi2223-608:NQgbUZGRCYFx9Zlm@proyects.aukjk.mongodb.net/?retryWrites=true&w=majority"
@@ -58,8 +61,10 @@ app.use("/songs/buy",userSessionRouter)
 app.use("/purchases",userSessionRouter)
 app.use("/comments/",userSessionRouter)
 app.use("/audios/",userAudiosRouter)
-app.use("/songs/edit",userAuthorRouter);
-app.use("/songs/delete",userAuthorRouter);
+app.use("/songs/edit",userAuthorRouter)
+app.use("/songs/delete",userAuthorRouter)
+
+app.use("/api/v1.0/songs/", userTokenRouter);
 
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -71,7 +76,7 @@ require('./routes/users')(app, usersRepository)
 require('./routes/songs')(app, songsRepository, commentsRepository)
 require('./routes/authors')(app)
 require('./routes/comments')(app, commentsRepository, songsRepository)
-require('./routes/api/songsAPIv1.0')(app, songsRepository)
+require('./routes/api/songsAPIv1.0')(app, songsRepository, usersRepository)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
