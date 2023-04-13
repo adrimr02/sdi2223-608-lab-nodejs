@@ -71,6 +71,7 @@ require('./routes/users')(app, usersRepository)
 require('./routes/songs')(app, songsRepository, commentsRepository)
 require('./routes/authors')(app)
 require('./routes/comments')(app, commentsRepository, songsRepository)
+require('./routes/api/songsAPIv1.0')(app, songsRepository)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
