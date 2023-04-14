@@ -2,6 +2,9 @@
   "name": "tienda_musica",
   "description": "Tienda de música",
   "version": "1.0.0",
+  "scripts": {
+    "start": "node hello-world-server.js"
+  },
   "dependencies": {
     "express": "^4.17.1"
   },
