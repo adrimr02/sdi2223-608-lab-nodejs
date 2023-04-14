@@ -8,6 +8,7 @@ const logger = require('morgan')
 const crypto = require('crypto')
 const expressSession = require('express-session')
 let jwt = require('jsonwebtoken')
+let rest = require('request');
 
 const userSessionRouter = require('./routes/userSessionRouter')
 const userAudiosRouter = require('./routes/userAudiosRouter')
@@ -22,6 +23,7 @@ const indexRouter = require('./routes/index')
 
 // Server setup
 const app = express()
+app.set('rest', rest);
 app.set('uploadPath', __dirname)
 app.set('clave', 'abcdefg')
 app.set('crypto', crypto)

@@ -162,10 +162,26 @@ module.exports = function (app, songsRepository, commentRepo) {
   app.get('/songs/:id', function(req, res) {
     let filter = { _id: ObjectId(req.params.id) }
     let options = {}
+    let settings = {
+      url: "https://www.freeforexapi.com/api/live?pairs=EURUSD",
+      method: "get",
+      headers: {
+        "token": "ejemplo",
+      }
+    }
     songsRepository.findSong(filter, options).then( async song => {
       const comments = await commentRepo.getComments({ song_id: ObjectId(song._id) },{})
       const purchased = await songsRepository.getPurchases({songId: song._id, user: req.session.user}, {})
-      res.render("songs/song.twig", { song, comments, owns: song.author === req.session.user || purchased.length > 0 })
+      let rest = app.get("rest");
+      rest(settings, function (error, response, body) {
+        console.log("cod: " + response.statusCode + " Cuerpo :" + body);
+        let responseObject = JSON.parse(body);
+        let rateUSD = responseObject.rates.EURUSD.rate;
+        // nuevo campo "usd" redondeado a dos decimales
+        let songValue= rateUSD * song.price;
+        song.usd = Math.round(songValue * 100) / 100;
+        res.render("songs/song.twig", { song, comments, owns: song.author === req.session.user || purchased.length > 0 })
+      })
     }).catch(error => {
       res.send("Se ha producido un error al buscar la canción " + error)
     })
